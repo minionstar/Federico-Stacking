@@ -28,5 +28,5 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       accounts: [`0xd58a4cb18c063ac40243568e1137ea1d42fe219a43c330ca9a0a8c27c19c4743`]
     }
   },
-  solidity: "0.8.4",
+  solidity: "0.8.0",
 };

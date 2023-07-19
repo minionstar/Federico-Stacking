@@ -46,6 +46,7 @@ interface IERC20Metadata is IERC20 {
     function symbol() external view returns (string memory);
 
     function decimals() external view returns (uint8);
+
 }
 
 contract ERC20 is Context, IERC20, IERC20Metadata {
@@ -284,9 +285,33 @@ abstract contract Ownable is Context {
         _owner = newOwner;
     }
 }
-contract MocUSDT is ERC20 {
-    constructor() ERC20("MocUSDT", "MocUSDT") {
-        _mint(msg.sender, 100000 * (10 ** 18));
+
+contract QNVToken is ERC20, Ownable{
+    address admin;
+
+    constructor() ERC20("QNV Token", "QNV") {}
+
+    modifier onlyAdmin() {
+        require(
+            isAdmin(msg.sender) == true,
+            "Admins can only call this function"
+        );
+        _;
+    }
+
+    function mint(address to, uint256 amount) external onlyAdmin {
+        _mint(to, amount);
+    }
+
+    function burn(address to, uint256 amount) external onlyAdmin {
+        _burn(to, amount);
+    }
+
+    function isAdmin(address sender) internal view returns (bool) {
+        return sender == admin;
+    }
+
+    function updateAdmin(address updateAddress) external onlyOwner {
+        admin = updateAddress;
     }
 }
-
