@@ -5,6 +5,7 @@
 // Runtime Environment's members available in the global scope.
 // import { ethers } from "hardhat";
 const hre = require("hardhat");
+require("@nomiclabs/hardhat-etherscan");
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -30,16 +31,37 @@ async function main() {
   //pancake 0x10ED43C718714eb63d5aA57B78B54704E256024E
   const QNVToken = await hre.ethers.getContractFactory("QNVToken");
   const qnvToken = await QNVToken.deploy();
+  await qnvToken.deployed();
 
   const UsdtToken = await hre.ethers.getContractFactory("MocUSDT");
   const usdtToken = await UsdtToken.deploy();
-  
-  const TreasuryContract = await hre.ethers.getContractFactory("QNVToken");
+  await usdtToken.deployed();
+
+  const TreasuryContract = await hre.ethers.getContractFactory("StakeQNV");
   const treasuryContract = await TreasuryContract.deploy(qnvToken.address, usdtToken.address);
+  await treasuryContract.deployed();
 
-  await staking.deployed();
+  console.log(qnvToken.address);
+  console.log(usdtToken.address);
+  console.log(treasuryContract.address);
 
-  console.log("Staking deployed to:", staking.address);
+  // await hre.run("verify:verify", {
+  //   address: qnvToken.address,
+  //   contract: "contracts/QNVToken.sol:QNVToken",
+  //   constructorArguments: [],
+  // });
+
+  // await hre.run("verify:verify", {
+  //   address: usdtToken.address,
+  //   contract: "contracts/MocUSDT.sol:MocUSDT",
+  //   constructorArguments: [],
+  // });
+
+  await hre.run("verify:verify", {
+    address: treasuryContract.address,
+    contract: "contracts/Staking.sol:StakeQNV",
+    constructorArguments: [qnvToken.address, usdtToken.address],
+  });
 }
 
 // We recommend this pattern to be able to use async/await everywhere
