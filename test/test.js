@@ -46,7 +46,7 @@ describe("test QNV token", function () {
         expect(await qnvToken.admin()).to.be.equal(owner.address);
     })
 
-    it("stake tokens", async function () {
+    it("test stake and claim tokens", async function () {
         await qnvToken.connect(owner).updateAdmin(treasuryContract.address);
         expect(await qnvToken.admin()).to.be.equal(treasuryContract.address);
 

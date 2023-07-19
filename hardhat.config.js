@@ -27,7 +27,7 @@ module.exports = {
   },
   networks: {
     hardhat: {},
-    ropsten: {
+    mumbai: {
       url: "https://polygon-mumbai.g.alchemy.com/v2/JIGtGieoV-DRZMJZtE3GiKKUlB7JIL6v",
       accounts: [`0x95fda7eeab8021f0a3f897588e37afb04382b08a8119e9c33bf40b631f2e220c`]
 

@@ -28,11 +28,14 @@ async function main() {
 
   //0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
   //pancake 0x10ED43C718714eb63d5aA57B78B54704E256024E
-  const Staking = await hre.ethers.getContractFactory("QNVToken");
-  const staking = await Staking.deploy(
-    "0x64ef3ae48977075d917e448b61c7b030b9c387fc",
-    "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
-    "0x10ED43C718714eb63d5aA57B78B54704E256024E");//imme, busd, router
+  const QNVToken = await hre.ethers.getContractFactory("QNVToken");
+  const qnvToken = await QNVToken.deploy();
+
+  const UsdtToken = await hre.ethers.getContractFactory("MocUSDT");
+  const usdtToken = await UsdtToken.deploy();
+  
+  const TreasuryContract = await hre.ethers.getContractFactory("QNVToken");
+  const treasuryContract = await TreasuryContract.deploy(qnvToken.address, usdtToken.address);
 
   await staking.deployed();
 
