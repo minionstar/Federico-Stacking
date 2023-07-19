@@ -110,7 +110,7 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
             "You already participated"
         );
         require(
-            qnvToken.balanceOf(_msgSender()) >= stakeAmount,
+            stableToken.balanceOf(_msgSender()) >= stakeAmount,
             "Insufficient Balance"
         );
 
@@ -132,7 +132,7 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
         // mint QNV token to user according to the staked stable token amount
         uint256 mintQNVAmount = stakeAmount +
             ((stakeAmount * stakeInfos[_msgSender()].interestRate) / 100);
-        qnvToken.transfer(_msgSender(), mintQNVAmount);
+        qnvToken.mint(_msgSender(), mintQNVAmount);
         
         totalStakers++;
         addressStaked[_msgSender()] = true;

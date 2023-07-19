@@ -26,7 +26,7 @@ describe("test QNV token", function () {
         console.log("QNV token successfully deployed to ", qnvToken.address);
 
         //deploy moc usdt token
-        const UsdtToken = await ethers.getContractFactory("QNVToken");
+        const UsdtToken = await ethers.getContractFactory("MocUSDT");
         usdtToken = await UsdtToken.deploy();
         await usdtToken.deployed();
         console.log("Moc USDT token successfully deployed to ", usdtToken.address);
@@ -40,6 +40,33 @@ describe("test QNV token", function () {
     it("set the treasury as an admin", async function () {
         await qnvToken.connect(owner).updateAdmin(owner.address);
         expect(await qnvToken.admin()).to.be.equal(owner.address);
+    })
+
+    it("stake tokens", async function () {
+        await qnvToken.connect(owner).updateAdmin(treasuryContract.address);
+        expect(await qnvToken.admin()).to.be.equal(treasuryContract.address);
+
+        //send some Moc USDT to user for test
+        await usdtToken.connect(owner).transfer(user.address, ethers.utils.parseEther("100"));
+
+        //approve usdt to the treasury contract.
+        await usdtToken.connect(user).approve(treasuryContract.address, ethers.utils.parseEther("10"));
+        expect(await usdtToken.allowance(user.address, treasuryContract.address)).to.be.equal(ethers.utils.parseEther("10"));
+
+        const allowedAmount = await usdtToken.allowance(user.address, treasuryContract.address);
+        console.log("allowed balance : ", allowedAmount);
+
+        await treasuryContract.connect(user).stakeToken(allowedAmount, 1);
+        
+        //check expired time
+        await treasuryContract.connect(user).getTokenExpiry();
+
+        //check user's balance of QNV token
+        // expect(await qnvToken.balanceOf(user.address)).to.be.equal(allowedAmount * 5 / 100);
+        // test claim before end time.
+        // await treasuryContract.connect(user).claimReward();
+
+        
     })
 
 });

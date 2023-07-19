@@ -286,7 +286,7 @@ abstract contract Ownable is Context {
 }
 contract MocUSDT is ERC20 {
     constructor() ERC20("MocUSDT", "MocUSDT") {
-        _mint(msg.sender, 100000 * (10 ** 18));
+        _mint(_msgSender(), 100000 * (10 ** 18));
     }
 }
 
