@@ -287,7 +287,7 @@ abstract contract Ownable is Context {
 }
 
 contract QNVToken is ERC20, Ownable{
-    address admin;
+    address public admin;
 
     constructor() ERC20("QNV Token", "QNV") {}
 

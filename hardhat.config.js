@@ -24,9 +24,14 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   networks: {
     hardhat: {},
     ropsten: {
-      url: "https://ropsten.infura.io/v3/d5b31ecc4b654f8b84cf1f975cd1042d",
-      accounts: [`0xd58a4cb18c063ac40243568e1137ea1d42fe219a43c330ca9a0a8c27c19c4743`]
+      url: "https://polygon-mumbai.g.alchemy.com/v2/JIGtGieoV-DRZMJZtE3GiKKUlB7JIL6v",
+      accounts: [`0x95fda7eeab8021f0a3f897588e37afb04382b08a8119e9c33bf40b631f2e220c`]
+                    
     }
   },
   solidity: "0.8.0",
+  gasReporter: {
+    currency: 'CHF',
+    gasPrice: 21
+  }
 };
