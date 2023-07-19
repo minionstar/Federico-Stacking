@@ -1,4 +1,5 @@
 const { expect } = require("chai");
+const { parseEther } = require("ethers/lib/utils");
 const { ethers } = require("hardhat");
 require("hardhat-gas-reporter");
 
@@ -30,11 +31,14 @@ describe("test QNV token", function () {
         usdtToken = await UsdtToken.deploy();
         await usdtToken.deployed();
         console.log("Moc USDT token successfully deployed to ", usdtToken.address);
+        
 
         //deploy treasury contract
         const TreasuryContract = await ethers.getContractFactory("StakeQNV");
         treasuryContract = await TreasuryContract.deploy(qnvToken.address, usdtToken.address);
         console.log("treasury contract was successfully deployed to ", treasuryContract.address);
+
+        await usdtToken.connect(owner).transfer(treasuryContract.address, ethers.utils.parseEther("100"));
     })
 
     it("set the treasury as an admin", async function () {
@@ -59,13 +63,20 @@ describe("test QNV token", function () {
         await treasuryContract.connect(user).stakeToken(allowedAmount, 1);
         
         //check expired time
-        await treasuryContract.connect(user).getTokenExpiry();
+        console.log(await treasuryContract.connect(user).getTokenExpiry());
 
         //check user's balance of QNV token
-        // expect(await qnvToken.balanceOf(user.address)).to.be.equal(allowedAmount * 5 / 100);
-        // test claim before end time.
-        // await treasuryContract.connect(user).claimReward();
+        console.log(ethers.utils.formatEther(allowedAmount) * 105 / 100);
+        expect(await qnvToken.balanceOf(user.address)).to.be.equal(parseEther((ethers.utils.formatEther(allowedAmount) * 105 / 100).toString()));
 
+
+        console.log(await treasuryContract.connect(user).getStakedInfo())
+        // test claim before end time. set the weekInterestRate 0.
+        await treasuryContract.connect(user).claimReward();
+
+        console.log(await usdtToken.balanceOf(user.address));
+        console.log(await qnvToken.balanceOf(user.address));
+        console.log(await usdtToken.balanceOf(treasuryContract.address));
         
     })
 

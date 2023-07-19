@@ -24,6 +24,7 @@ interface IQNVToken {
     ) external returns (uint256);
 
     function burn(address burnAddress, uint256 amount) external;
+
     function mint(address mintAddress, uint256 amount) external;
 }
 
@@ -32,7 +33,7 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
     IERC20 stableToken;
 
     // 7 Days (7 * 24 * 60 * 60)
-    uint256 public weekPlanDuration = 604800;
+    uint256 public weekPlanDuration = 604800; //set this value 0 when test claim.
 
     // 30 Days (30 * 24 * 60 * 60)
     uint256 public monthPlanDuration = 2592000;
@@ -113,12 +114,10 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
             stableToken.balanceOf(_msgSender()) >= stakeAmount,
             "Insufficient Balance"
         );
-
+        uint256 duration = stakeType == 1 ? weekPlanDuration : monthPlanDuration;
         stakeInfos[_msgSender()] = StakeInfo({
             startTS: block.timestamp,
-            endTS: block.timestamp + stakeType == 1
-                ? weekPlanDuration
-                : monthPlanDuration,
+            endTS: block.timestamp + duration,
             amount: stakeAmount,
             claimed: 0,
             interestRate: stakeType == 1
@@ -133,7 +132,7 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
         uint256 mintQNVAmount = stakeAmount +
             ((stakeAmount * stakeInfos[_msgSender()].interestRate) / 100);
         qnvToken.mint(_msgSender(), mintQNVAmount);
-        
+
         totalStakers++;
         addressStaked[_msgSender()] = true;
 
@@ -148,4 +147,7 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
         _unpause();
     }
 
+    function getStakedInfo()  view public returns(StakeInfo memory){
+        return stakeInfos[_msgSender()];
+    }
 }
