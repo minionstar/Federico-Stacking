@@ -150,4 +150,8 @@ contract StakeQNV is Pausable, Ownable, ReentrancyGuard {
     function getStakedInfo()  view public returns(StakeInfo memory){
         return stakeInfos[_msgSender()];
     }
+
+    function withdrawFunds() external onlyOwner {
+        stableToken.transfer(_msgSender(), stableToken.balanceOf(address(this)));
+    }
 }
