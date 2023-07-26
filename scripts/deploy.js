@@ -29,21 +29,21 @@ async function main() {
 
   //0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
   //pancake 0x10ED43C718714eb63d5aA57B78B54704E256024E
-  const QNVToken = await hre.ethers.getContractFactory("QNVToken");
-  const qnvToken = await QNVToken.deploy();
-  await qnvToken.deployed();
+  // const QNVToken = await hre.ethers.getContractFactory("QNVToken");
+  // const qnvToken = await QNVToken.deploy();
+  // await qnvToken.deployed();
 
-  const UsdtToken = await hre.ethers.getContractFactory("MocUSDT");
-  const usdtToken = await UsdtToken.deploy();
-  await usdtToken.deployed();
+  // const UsdtToken = await hre.ethers.getContractFactory("MocUSDT");
+  // const usdtToken = await UsdtToken.deploy();
+  // await usdtToken.deployed();
 
-  const TreasuryContract = await hre.ethers.getContractFactory("StakeQNV");
-  const treasuryContract = await TreasuryContract.deploy(qnvToken.address, usdtToken.address);
-  await treasuryContract.deployed();
+  // const TreasuryContract = await hre.ethers.getContractFactory("StakeQNV");
+  // const treasuryContract = await TreasuryContract.deploy(qnvToken.address, usdtToken.address);
+  // await treasuryContract.deployed();
 
-  console.log(qnvToken.address);
-  console.log(usdtToken.address);
-  console.log(treasuryContract.address);
+  // console.log(qnvToken.address);
+  // console.log(usdtToken.address);
+  // console.log(treasuryContract.address);
 
   // await hre.run("verify:verify", {
   //   address: qnvToken.address,
@@ -57,11 +57,18 @@ async function main() {
   //   constructorArguments: [],
   // });
 
-  await hre.run("verify:verify", {
-    address: treasuryContract.address,
+  // await hre.run("verify:verify", {
+  //   address: treasuryContract.address,
+  //   contract: "contracts/Staking.sol:StakeQNV",
+  //   constructorArguments: [qnvToken.address, usdtToken.address],
+  // });
+
+    await hre.run("verify:verify", {
+    address: "0xc0597C1c635D6cE203AB1684e78e0620DE6f632e",
     contract: "contracts/Staking.sol:StakeQNV",
-    constructorArguments: [qnvToken.address, usdtToken.address],
+    constructorArguments: ["0xedBd183CAE43cB3928b4CEc4e221Ac851fEF4Bdd", "0xc21e0bEab1d3f47ec89EC398b4957533d5368F2B"],
   });
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -70,3 +77,5 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+
